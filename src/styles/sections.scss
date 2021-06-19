@@ -1,0 +1,44 @@
+.add-customer-section,
+.customers-section {
+  padding: 1.25rem 0;
+  margin-bottom: 1rem;
+
+  h3 {
+    text-transform: uppercase;
+    color: $text-muted;
+    margin: 0;
+    padding: 0 0 1rem 0;
+  }
+}
+
+.add-customer-section {
+  border-bottom: 1px solid black;
+
+  form {
+    .form-group {
+      position: relative;
+
+      .text-error {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 3.5rem;
+      }
+    }
+  }
+}
+
+.customers-section {
+  table {
+    tbody {
+      tr {
+        td,
+        th {
+          vertical-align: middle;
+          &:last-child {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
