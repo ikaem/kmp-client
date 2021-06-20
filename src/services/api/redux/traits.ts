@@ -1,5 +1,3 @@
-import { ErrorData } from '../types';
-
 export const isLoading = (data: any): boolean => {
   return data.api_status.isLoading;
 };

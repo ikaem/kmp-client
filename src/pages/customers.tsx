@@ -30,7 +30,7 @@ export const Customers = () => {
 
   useEffect(() => {
     getCustomers();
-  }, []);
+  }, [getCustomers]);
 
   const renderCustomers = useMemo(() => {
     const customersForRender =
@@ -59,7 +59,7 @@ export const Customers = () => {
         </tr>
       )
     );
-  }, [customersState, isLoading, isValid]);
+  }, [customersState, deleteCustomer]);
 
   return (
     <div className='container'>
