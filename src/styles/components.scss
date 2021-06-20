@@ -1,0 +1,12 @@
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  align-items: center;
+  color: rgb(100, 100, 100);
+
+  > .loading-label {
+    margin-left: 1rem;
+    color: rgb(100, 100, 100);
+  }
+}

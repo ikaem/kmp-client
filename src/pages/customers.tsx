@@ -1,9 +1,11 @@
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { CustomButton } from '../common';
-import React from 'react';
+import { CustomButton, LoadingSpinner } from '../common';
+import { useCustomers } from '../services/customers';
+import { isEmpty, isLoading, isValid } from '../services/api';
 
 const validationSchema = yup.object({
   firstName: yup.string().required('First name is required'),
@@ -21,15 +23,49 @@ export const Customers = () => {
     mode: 'all',
   });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log('data');
-  });
+  const { customersState, getCustomers, createCustomer, deleteCustomer } =
+    useCustomers();
+
+  const onSubmitNewCustomer = handleSubmit(createCustomer);
+
+  useEffect(() => {
+    getCustomers();
+  }, []);
+
+  const renderCustomers = useMemo(() => {
+    const customersForRender =
+      !isLoading(customersState) &&
+      isValid(customersState) &&
+      !isEmpty(customersState)
+        ? customersState.customers
+        : [];
+
+    return customersForRender.map(
+      ({ id, firstName, lastName, email }, index) => (
+        <tr key={id} className='table-row'>
+          <th scope='row'>{index + 1}</th>
+          <td>{firstName}</td>
+          <td>{lastName}</td>
+          <td>{email}</td>
+          <td>
+            <CustomButton
+              type='button'
+              className='btn btn-danger'
+              onClick={() => deleteCustomer(id)}
+            >
+              Delete
+            </CustomButton>
+          </td>
+        </tr>
+      )
+    );
+  }, [customersState, isLoading, isValid]);
 
   return (
     <div className='container'>
       <section className='add-customer-section'>
         <h3>Add a customer</h3>
-        <form className='add-customer_form' onSubmit={onSubmit}>
+        <form className='add-customer_form' onSubmit={onSubmitNewCustomer}>
           <div className='row'>
             <div className='form-group col-12 col-md-4'>
               <label htmlFor='firstName' className='form-label'>
@@ -83,13 +119,20 @@ export const Customers = () => {
               )}
             </div>
           </div>
+
           <CustomButton type='submit' className='btn btn-primary mt-3'>
             Add customer
           </CustomButton>
         </form>
       </section>
+
       <section className='customers-section'>
-        <h3>Customers:</h3>
+        <div className='d-flex justify-content-between'>
+          <h3>Customers:</h3>
+          {isLoading(customersState) && (
+            <LoadingSpinner>Working...</LoadingSpinner>
+          )}
+        </div>
 
         <div className='table-responsive'>
           <table className='table table-striped table-hover'>
@@ -102,23 +145,7 @@ export const Customers = () => {
                 <th></th>
               </tr>
             </thead>
-            <tbody>
-              <tr className='table-row'>
-                <th scope='row'>1</th>
-                <td>Karlo</td>
-                <td>Marinović</td>
-                <td>email</td>
-                <td>
-                  <CustomButton
-                    type='submit'
-                    className='btn btn-danger'
-                    onClick={async (e) => console.log('what')}
-                  >
-                    Delete
-                  </CustomButton>
-                </td>
-              </tr>
-            </tbody>
+            <tbody>{renderCustomers}</tbody>
           </table>
         </div>
       </section>
