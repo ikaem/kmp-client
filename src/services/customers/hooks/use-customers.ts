@@ -10,6 +10,7 @@ import {
   getCustomersState,
   getCustomersErrors,
 } from '../';
+import { UseFormReset } from 'react-hook-form';
 
 export const useCustomers = () => {
   const dispatch = useDispatch();
@@ -31,12 +32,21 @@ export const useCustomers = () => {
   }, [dispatch, addToast]);
 
   const createCustomer = useCallback(
-    async (data: NewCustomerInput) => {
+    async (
+      data: NewCustomerInput,
+      resetForm: UseFormReset<{
+        firstName: string;
+        lastName: string;
+        email: string;
+      }>
+    ) => {
       const res = await dispatch(addCustomer(data));
 
       // @ts-ignore
-      if (res.ok)
+      if (res.ok) {
         addToast('Customer successfully created', { appearance: 'success' });
+        resetForm();
+      }
     },
     [dispatch, addToast]
   );

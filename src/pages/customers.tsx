@@ -18,6 +18,7 @@ export const Customers = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<{ firstName: string; lastName: string; email: string }>({
     resolver: yupResolver(validationSchema),
     mode: 'all',
@@ -26,7 +27,9 @@ export const Customers = () => {
   const { customersState, getCustomers, createCustomer, deleteCustomer } =
     useCustomers();
 
-  const onSubmitNewCustomer = handleSubmit(createCustomer);
+  const onSubmitNewCustomer = handleSubmit((data) =>
+    createCustomer(data, reset)
+  );
 
   useEffect(() => {
     getCustomers();
