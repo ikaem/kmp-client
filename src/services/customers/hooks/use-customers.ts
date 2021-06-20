@@ -16,7 +16,6 @@ export const useCustomers = () => {
   const { addToast } = useToasts();
 
   const customersState = useSelector(getCustomersState);
-
   const customersErrors = useSelector(getCustomersErrors);
 
   useEffect(() => {
